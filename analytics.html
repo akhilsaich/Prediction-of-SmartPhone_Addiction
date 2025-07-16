@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Analytics - Smartphone Addiction</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+        .navbar {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px);
+        }
+        .card {
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.95);
+            margin-bottom: 1.5rem;
+        }
+        .accuracy-card {
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s;
+        }
+        .accuracy-card:hover {
+            transform: translateY(-5px);
+        }
+        .btn-primary {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(to right, #764ba2, #667eea);
+        }
+        .graph-container {
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-mobile-alt me-2"></i>
+                Addiction Assessment
+            </a>
+            <div class="navbar-nav ms-auto">
+                {% if current_user.is_authenticated %}
+                <span class="nav-item nav-link text-light">
+                    <i class="fas fa-user me-2"></i>{{ current_user.username }}
+                </span>
+                <a class="nav-item nav-link" href="{{ url_for('logout') }}">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">
+                            <i class="fas fa-chart-bar me-2"></i>Model Analytics
+                        </h2>
+                        
+                        <div class="row mb-4">
+                            {% for model, accuracy in accuracies.items() %}
+                            <div class="col-md-4 mb-3">
+                                <div class="card accuracy-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ model }}</h5>
+                                        <p class="card-text">
+                                            <span class="h3 text-primary">{{ accuracy }}%</span>
+                                            <br>
+                                            <small class="text-muted">Accuracy Score</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="graph-container text-center mb-4">
+                            <h4 class="mb-4">Model Comparison</h4>
+                            <img src="data:image/png;base64,{{ graph_url }}" 
+                                 alt="Model Comparison Graph" 
+                                 class="img-fluid">
+                        </div>
+
+                        <div class="text-center">
+                            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Assessment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

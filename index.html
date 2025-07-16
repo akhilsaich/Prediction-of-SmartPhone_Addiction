@@ -1,0 +1,175 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartphone Addiction Assessment</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+        .navbar {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px);
+        }
+        .card {
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .form-control {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+        }
+        .btn-primary {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(to right, #764ba2, #667eea);
+        }
+        .welcome-section {
+            text-align: center;
+            color: white;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-mobile-alt me-2"></i>
+                Addiction Assessment
+            </a>
+            <div class="navbar-nav ms-auto">
+                {% if current_user.is_authenticated %}
+                <span class="nav-item nav-link text-light">
+                    <i class="fas fa-user me-2"></i>{{ current_user.username }}
+                </span>
+                <a class="nav-item nav-link" href="{{ url_for('logout') }}">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1>Welcome to Smartphone Addiction Assessment</h1>
+            <p class="lead">Complete the form below to evaluate your smartphone usage patterns</p>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+
+        <div class="card">
+            <div class="card-body">
+                <form action="{{ url_for('predict') }}" method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="Age" class="form-label">Age</label>
+                            <input type="number" class="form-control" id="Age" name="Age" required min="1" max="100">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="Gender" class="form-label">Gender</label>
+                            <select class="form-control" id="Gender" name="Gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="Daily Screen Time (hours)" class="form-label">Daily Screen Time (hours)</label>
+                            <input type="number" step="0.1" class="form-control" id="Daily Screen Time (hours)" name="Daily Screen Time (hours)" required min="0" max="24">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="Number of Apps Used Daily" class="form-label">Number of Apps Used Daily</label>
+                            <input type="number" class="form-control" id="Number of Apps Used Daily" name="Number of Apps Used Daily" required min="0">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="Social Media Usage (hours)" class="form-label">Social Media Usage (hours)</label>
+                            <input type="number" step="0.1" class="form-control" id="Social Media Usage (hours)" name="Social Media Usage (hours)" required min="0" max="24">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="Frequency of Checking Phone per Hour" class="form-label">Frequency of Checking Phone per Hour</label>
+                            <input type="number" step="1" class="form-control" id="Frequency of Checking Phone per Hour" name="Frequency of Checking Phone per Hour" required min="0">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="Use of Phone During Meals" class="form-label">Use of Phone During Meals</label>
+                            <select class="form-control" id="Use of Phone During Meals" name="Use of Phone During Meals" required>
+                                <option value="">Select Option</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="Use of Phone Before Sleep (hours)" class="form-label">Use of Phone Before Sleep (hours)</label>
+                            <input type="number" step="0.1" class="form-control" id="Use of Phone Before Sleep (hours)" name="Use of Phone Before Sleep (hours)" required min="0" max="24">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="Physical Symptoms" class="form-label">Physical Symptoms</label>
+                            <select class="form-control" id="Physical Symptoms" name="Physical Symptoms" required>
+                                <option value="">Select Option</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="Emotional Dependence on Phone" class="form-label">Emotional Dependence on Phone</label>
+                            <select class="form-control" id="Emotional Dependence on Phone" name="Emotional Dependence on Phone" required>
+                                <option value="">Select Option</option>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="Work/Study Interruption Frequency Due to Phone" class="form-label">Work/Study Interruption Frequency</label>
+                            <select class="form-control" id="Work/Study Interruption Frequency Due to Phone" name="Work/Study Interruption Frequency Due to Phone" required>
+                                <option value="">Select Option</option>
+                                <option value="Rarely">Rarely</option>
+                                <option value="Sometimes">Sometimes</option>
+                                <option value="Often">Often</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-chart-line me-2"></i>Analyze My Usage
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
